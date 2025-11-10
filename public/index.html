@@ -14,7 +14,17 @@
       <button id="joinBtn">Join Room</button>
     </div>
 
-    <div id="videos"></div>
+   <div id="container" style="display: flex; gap: 1rem;">
+  <div id="videos"></div>
+
+  <div id="chatBox" style="width: 300px; border-left: 1px solid #ccc; padding: 10px;">
+    <div id="chatMessages" style="height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 5px;"></div>
+
+    <input id="chatInput" type="text" placeholder="Type a message..." style="width: 100%; margin-top: 5px;" />
+    <button id="sendBtn">Send</button>
+  </div>
+</div>
+
 
     <script src="script.js"></script>
   </body>

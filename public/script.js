@@ -1,11 +1,17 @@
-const socket = io("https://google-meet-8dov.onrender.com/");
-
+// const socket = io("https://google-meet-8dov.onrender.com/");
+const socket = io("http://localhost:3000");
 const roomInput = document.getElementById("roomInput");
 const joinBtn = document.getElementById("joinBtn");
 const videos = document.getElementById("videos");
+const chatInput = document.getElementById("chatInput");
+const sendBtn = document.getElementById("sendBtn");
+const chatMessages = document.getElementById("chatMessages");
 
 let localStream;
 let peers = {}; // { socketId: RTCPeerConnection }
+
+let userName = prompt("Enter your name:") || "Anonymous";
+let roomId = "";
 
 const servers = { iceServers: [{ urls: "stun:stun.l.google.com:19302" },
      {
@@ -16,7 +22,7 @@ const servers = { iceServers: [{ urls: "stun:stun.l.google.com:19302" },
 ] };
 
 joinBtn.onclick = async () => {
-  const roomId = roomInput.value.trim();
+ roomId = roomInput.value.trim();
   if (!roomId) return alert("Please enter a room ID");
 
   localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
@@ -39,6 +45,19 @@ socket.on("user-joined", async (socketId) => {
   socket.emit("offer", offer, socketId);
 });
 
+sendBtn.onclick = () => {
+  const message = chatInput.value.trim();
+  if (!message) return;
+  socket.emit("chat-message", { roomId, name: userName, message });
+  chatInput.value = "";
+};
+
+socket.on("chat-message", ({ name, message }) => {
+  const div = document.createElement("div");
+  div.innerHTML = `<strong>${name}:</strong> ${message}`;
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight; // auto-scroll
+});
 socket.on("offer", async (offer, socketId) => {
      if (peers[socketId]) return;
   const peer = createPeer(socketId);

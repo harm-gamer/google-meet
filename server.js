@@ -24,13 +24,15 @@ io.on("connection", (socket) => {
     console.log(`User ${socket.id} joined room ${roomId}`);
 
     // Notify other users in the room
-    socket.to(roomId).emit("user-joined", socket.id);
+    socket.broadcast.to(roomId).emit("user-joined", socket.id);
   });
 
   socket.on("offer", (offer, to) => {
     io.to(to).emit("offer", offer, socket.id);
   });
-
+ socket.on("chat-message", ({ roomId, name, message }) => {
+    io.to(roomId).emit("chat-message", { name, message });
+  });
   socket.on("answer", (answer, to) => {
     io.to(to).emit("answer", answer, socket.id);
   });
@@ -42,7 +44,7 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     for (const [roomId, users] of Object.entries(rooms)) {
       rooms[roomId] = users.filter((id) => id !== socket.id);
-      socket.to(roomId).emit("user-left", socket.id);
+      socket.broadcast.to(roomId).emit("user-left", socket.id);
     }
   });
 });
