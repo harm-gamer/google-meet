@@ -1,5 +1,5 @@
-// const socket = io("https://google-meet-8dov.onrender.com/");
-const socket = io("http://localhost:3000");
+ const socket = io("https://google-meet-8dov.onrender.com/");
+
 const roomInput = document.getElementById("roomInput");
 const joinBtn = document.getElementById("joinBtn");
 const videos = document.getElementById("videos");
