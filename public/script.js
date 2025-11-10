@@ -1,4 +1,4 @@
-const socket = io("http://localhost:3000");
+const socket = io("https://google-meet-8dov.onrender.com/");
 
 const roomInput = document.getElementById("roomInput");
 const joinBtn = document.getElementById("joinBtn");
@@ -7,7 +7,13 @@ const videos = document.getElementById("videos");
 let localStream;
 let peers = {}; // { socketId: RTCPeerConnection }
 
-const servers = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
+const servers = { iceServers: [{ urls: "stun:stun.l.google.com:19302" },
+     {
+      urls: "turn:openrelay.metered.ca:80",
+      username: "openrelayproject",
+      credential: "openrelayproject",
+    },
+] };
 
 joinBtn.onclick = async () => {
   const roomId = roomInput.value.trim();
