@@ -27,6 +27,7 @@ joinBtn.onclick = async () => {
 
 // When another user joins
 socket.on("user-joined", async (socketId) => {
+      if (peers[socketId]) return;
   console.log("New user joined:", socketId);
   const peer = createPeer(socketId);
   peers[socketId] = peer;
@@ -39,6 +40,7 @@ socket.on("user-joined", async (socketId) => {
 });
 
 socket.on("offer", async (offer, socketId) => {
+     if (peers[socketId]) return;
   const peer = createPeer(socketId);
   peers[socketId] = peer;
 
@@ -86,6 +88,7 @@ function createPeer(socketId) {
 
 // Helper: Add video stream to page
 function addVideoStream(id, stream, isLocal) {
+    if (document.getElementById(id)) return;
   let video = document.createElement("video");
   video.id = id;
   video.srcObject = stream;
